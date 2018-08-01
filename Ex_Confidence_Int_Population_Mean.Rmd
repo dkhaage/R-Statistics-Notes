@@ -1,0 +1,75 @@
+---
+title: "Confidence Interval for Population Mean"
+author: "Dieter Haage"
+date: "August 1, 2018"
+output: word_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+# Step 1) Load Data
+```{r echo=FALSE}
+lifeexp <- read.csv('Life_exp_non_OECD_subset.csv', header = T)
+
+View(lifeexp)
+
+str(lifeexp)
+```
+
+# Step 2) Perform Exploratory Analysis
+
+```{r}
+qqnorm(lifeexp$Male)
+
+```
+Data appears normal, given small sample size
+
+# Step 3) Remove outliers
+
+```{r}
+boxplot(lifeexp$Male)
+```
+
+No extreme outliers, hence no points are removed 
+
+# Step 4) Compute sample mean, SD and SE of the mean
+
+```{r}
+n <- nrow(lifeexp)
+
+age.mean <- mean(lifeexp$Male)
+age.std <- sd(lifeexp$Male)
+age.SE <- age.std/sqrt(n)
+
+print(paste("The mean is", signif(age.mean,4),'with standard deviation of', signif(age.std,4),"and standard error of",signif(age.SE,4)))
+
+```
+
+# Step 5) Compute the t-value of the 95% confidence interval
+```{r}
+
+degrees.freedom <- n-1
+alpha <- 0.05
+tstar <- qt(1- alpha/2, df = degrees.freedom)
+
+print(paste("tstar is", signif(tstar,4)))
+
+
+```
+
+# Compute Confidenece Interval
+```{r}
+age.min <- age.mean - tstar*age.SE
+age.max <- age.mean + tstar*age.SE
+
+print(paste("The confidence interval is ", signif(age.min,4),"< age <", signif(age.max)))
+
+
+```
+
+# Step 7) Interpret Findings
+
+Based on the sample results, we are 95% confident that the limits of 60.72 and 69.62 contain the population mean life expectancy of males from non-OECD countries. Interestingly, the population mean male life expectancy of OECD countries' value of 77.86 lies beyond this confidence interval, suggesting that male life expectancy is less in non-OECD countries than in OECD countries..
+
+ 
